@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CommentData } from '../types/Comment';
 
 type Props = {
@@ -36,6 +36,12 @@ export const NewCommentForm: React.FC<Props> = ({ onSubmit, isSubmitting }) => {
     return newErrors;
   };
 
+  useEffect(() => {
+    if (wasSubmitted) {
+      setErrors(validate(formData));
+    }
+  }, [formData, wasSubmitted]);
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -45,12 +51,6 @@ export const NewCommentForm: React.FC<Props> = ({ onSubmit, isSubmitting }) => {
       ...current,
       [name]: value,
     }));
-
-    if (wasSubmitted) {
-      const updated = { ...formData, [name]: value } as CommentData;
-
-      setErrors(validate(updated));
-    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {

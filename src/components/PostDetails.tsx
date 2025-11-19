@@ -47,30 +47,15 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
   const handleCommentAdd = async (data: CommentData) => {
     setIsAdding(true);
 
-    const tempComment: Comment = {
-      id: Date.now(),
-      postId: post.id,
-      ...data,
-    };
-
-    setComments(prev => [...prev, tempComment]);
-
     try {
       const created = await client.post<Comment>('/comments', {
         ...data,
         postId: post.id,
       });
 
-      setComments(prev =>
-        prev.map(comment =>
-          comment.id === tempComment.id ? created : comment,
-        ),
-      );
+      setComments(prev => [...prev, created]);
     } catch {
-      setComments(prev =>
-        prev.filter(comment => comment.id !== tempComment.id),
-      );
-
+      setIsCommentsError(true);
       throw new Error('Failed to add comment');
     } finally {
       setIsAdding(false);

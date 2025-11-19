@@ -1,12 +1,10 @@
 import React from 'react';
-import { Post } from '../types/Post';
 import classNames from 'classnames';
+import { Post } from '../types/Post';
 
 type Props = {
   posts: Post[];
   selectedPostId: number | null;
-  isLoading: boolean;
-  isError: boolean;
   onPostToggle: (id: number) => void;
 };
 
