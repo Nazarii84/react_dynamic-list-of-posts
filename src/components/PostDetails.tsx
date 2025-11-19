@@ -31,12 +31,16 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
   }, [post.id]);
 
   const handleCommentDelete = (commentId: number) => {
+    // зберігаємо минулий стан
+    const previous = comments;
+
     setDeletingIds(prev => [...prev, commentId]);
-    setComments(prev => prev.filter(comment => comment.id !== commentId));
+    setComments(prev => prev.filter(c => c.id !== commentId));
 
     client
       .delete(`/comments/${commentId}`)
       .catch(() => {
+        setComments(previous);
         setIsCommentsError(true);
       })
       .finally(() => {
